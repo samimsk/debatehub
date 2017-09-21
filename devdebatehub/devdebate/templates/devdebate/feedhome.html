@@ -1,0 +1,49 @@
+    {% extends 'navbar/nav.html' %}
+    {% load staticfiles %}
+    {% block title %}Feed | HOME{% endblock %}
+    {% block content %}
+    <div class="container-fluid">
+    <br>
+    <br>
+    	<div class="row">
+    		<div class="col-md-3 text-center" style="font-size: 16px;">
+
+    		</div>
+    		<div class="col-md-6">
+					<div class="text-center" style="border-bottom: 2px solid #ccc;">
+						<br>
+						<a href="{% url 'home' %}" id="feedfilter" style="border-bottom: 2px solid #8BC34A;">Latest Debates</a>
+						<a href="{% url 'stories' %}" id="feedfilter">Stories Updates</a>
+						<a href="" id="feedfilter"></a>
+						<br>
+						<br>
+					</div>
+				<br>
+				<br>
+                {% for cards in homefeedlist %}
+				<div  class = "text-center" style="box-shadow: 0 0 8px 0 hsla(0,0%,70%,.7); padding: 15px; background-color: #fff; border-radius: 7px;">
+                <a href="{% url 'debatedetail' cards.id %}"><h4>{{ cards.title }}</h4></a>
+					<br>
+					<p>{{ cards.description }}</p>
+					<br>
+                    <p>For vs Against</p>
+					<div class="progress">
+  						<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ cards.stat }}%; background-color: #4CAF50;">
+    					{{ cards.stat }}%
+  						</div>
+					</div>
+					<p><strong>Hosted by </strong>&nbsp: &nbsp <a href="{% url 'profile' cards.hostedby.username %}">{{ cards.hostedby.username }}</a></p>
+					<p><strong>Opinion posted</strong>&nbsp: &nbsp ({{ cards.opinioncount }})</p>	
+				</div>
+                <br>
+                <br>
+                {% endfor %}	
+    		</div>
+   			<div class="col-md-3">
+    			<p>Kustomer is an evolution beyond traditional support applications that unifies all of your customer data and interactions.</p>
+                <br>
+                <p>The user experience is built around the customer so you can treat them like people instead of cases or tickets. Kustomer is the first system to completely integrate conversations, transactions and your company's proprietary data in one platform.</p>
+    		</div>
+    	</div>
+    </div>
+    {% endblock %}

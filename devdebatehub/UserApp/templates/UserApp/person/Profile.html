@@ -1,0 +1,140 @@
+{% include "navbar/nav.html" %}
+{% load staticfiles %}
+<br>
+<br>
+<div class="container">
+	<div class="row">
+		<div class="col-md-3 text-center">
+			<br>
+			<div style="border-bottom: 2px solid #ccc;">
+            {% if persondetails.profileimage %}
+                <img src ="{{ persondetails.profileimage.url }}" style="width: 60%; border: 2px solid #fff; border-radius: 50%; display: block; margin: auto;">
+            {% else %}
+                <img src ="{% static 'images/person-icon.png' %}" style="width: 60%; border: 2px solid #fff; border-radius: 50%; display: block; margin: auto;">
+            {% endif %}
+              	<br>
+              	{% if persondetails.firstname or persondetails.lastname %}
+            	<h4>{{ persondetails.firstname }} {{ persondetails.lastname }}</h4>
+            	{% endif %}
+            	<h5 style="color: #9e9e9e"><strong>Following({{ following }}) | Followers({{ followers }})</strong></h5>
+
+            </div>
+            <br>
+        	{% if cannotfollow == False %}
+        	<div id = "deletelink" >
+        	   <a href="{% url 'follow_user' person.username %}"><button type="button" class="btn btn-primary" id = "followbutton">Follow</button></a>
+        	</div>
+        	<div id ="confirmfollow"></div> 
+        	<br>
+        	{% endif %} 
+            <div style="text-align: left;">
+            	{% if persondetails.works_at %}
+            	   <p><strong>WORKS AT : &nbsp</strong>{{ persondetails.works_at }}</p>
+            	{% endif %}
+                {% if persondetails.collage %}
+                   <p><strong>COLLAGES : &nbsp</strong>{{ persondetails.collage }}</p>
+                {% endif %}
+                {% if persondetails.location %}
+                   <p><strong>LOCATION: &nbsp</strong>{{ persondetails.location }}</p>
+                {% endif %}
+            </div>
+		</div>
+		<div class="col-md-6 text-center" style="">
+			<div class="" style=" padding-left: 5%">
+				<br>
+				<br>
+				<ul class="nav nav-tabs" style="border-bottom: 2px solid #ccc;">
+	      			<li role="presentation" class="usermenu" style="{{ highlight }}"><a href="{% url 'profile' person.username %}" style="color: #757575;">Activities</a></li>
+	      			<li role="presentation" class="usermenu"><a href="{% url 'profileinfo'  person.username %}" style="color: #757575;">Profile Details</a></li>
+                    {% if person.username != request.user.username %}
+	      			<li role="presentation" class="usermenu"><a href="{% url 'message_user' person.username %}" style="color: #757575;">Messages</a></li>
+                    {% endif %}
+                    {% if person.username == request.user.username %}
+                    <li role="presentation" class="usermenu"><a href="{% url 'edit_profile_person' person.username %}"
+                    style="color: #757575;">Edit credentials</a></li>
+                    {% endif %}
+                    {% if person.username == request.user.username %}
+                    <li role="presentation" class="usermenu" style=""><a href="{% url 'update_person' person.username %}"
+                    style="color: #757575;">Edit profile!</a></li>
+                    {% endif %}
+	    		</ul>
+			</div>
+
+			<div class="components" style="padding-left: 10%; padding-right: 10%;">
+            {% if activities %}
+	    		<br>
+                <p>{{ activities|length }} &nbsp Opinions</p>
+                {% for act in activities %}
+	    		<div id = "listpost" style="border-bottom: 1px solid #ccc;">
+                <br>
+                    <h5 style="color: #999;"><a href="/">{{ act.opinion.topic.title }}</a></h5>
+                    <br>
+                    <p>{{ act.opinion.description }}</p>
+	    			<br>
+	    			<br>
+	    		</div>
+                {% endfor %}
+	    	</div>
+            {% endif %}
+		  </div>
+          </div>
+        <div class="col-md-3 text-center" style="">
+            <div class="text-center" style=" padding-left: 5% ;border-bottom: 1px solid #ccc;">
+                <br>
+                <br>
+                <p style="color: #999;">Associated with channel</p>
+                <p> Amity university</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+	
+$('#followbutton').on('click', function(event){
+    console.log("follow function invoked");
+    followfunc();
+    event.preventDefault();
+    return false; 
+});
+
+function followfunc() {
+    console.log("followfunc running") // sanity check
+    $.ajax({
+        url : "{% url 'follow_user' person.username %}", // the endpoint
+        type : "POST", // http method
+        success : function(json) {
+            var output = JSON.parse(json);
+            if (output["success"]) {
+                $('#confirmfollow').html("<p id = 'followsuccess'>You have followed {{ person.username }}</p>");
+                $('#deletelink').empty();
+                console.log(json);
+            };
+            // remove the value from the input
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+};
+</script>
+<script src="{% static 'javascripts/secure.js' %}"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

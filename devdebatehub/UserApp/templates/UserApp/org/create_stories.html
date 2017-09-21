@@ -1,0 +1,46 @@
+{% include "navbar/nav.html" %}
+{% load staticfiles %}
+<div class="container">
+	<br>
+	<br>
+	<div class="row">
+		<div class="col-lg-3">
+			<ul class="list-group" style="border-radius: 0px; ">
+				<li class="list-group-item" style="background-color: #7AD3B7; color: #fff;"><h4>DASHBOARD</h4></li>
+				<li class="list-group-item" style="background-color: {{ background }}"><a  href="{% url 'dashboard' request.user.username %}" style="text-decoration: none;"> Edit profile</a></li>
+
+				<li class="list-group-item"><a  href="{% url 'editorgdetails' request.user.username %}" style="text-decoration: none;"> Edit personal info</a></li>
+
+				<li class="list-group-item"><a  href="{% url 'createdebatepage' request.user.username %}" style="text-decoration: none;">Create a new debate</a></li>
+				<li class="list-group-item"><a  href="{% url 'createblogpage' request.user.username %}" style="text-decoration: none;">Publish a blog post</a></li>
+				<li class="list-group-item"><a  href="{% url 'createstoriespage' request.user.username %}" style="text-decoration: none;">Update Stories</a></li>
+			</ul>
+			<div class="text-center" style="background-color: #fff; border: 1px solid #eee;">
+			<br>
+			<a href="">Feed</a>&nbsp|&nbsp
+			<a href="">Profile</a>&nbsp|&nbsp
+			<a href="">Support</a><br>
+			<br>
+			</div>
+		</div>
+		<div class="col-lg-8 text-center">
+			<h4> UPDATE STORIES</h4>
+			<br>
+			<form action="{% url 'createstories' request.user.username %}" method="post" style="width: 50%; margin: 0 auto;">
+					{% csrf_token %}
+			    <div class="form-group text-center">
+			      <label>Story head </label>
+			        {{ form.heading }}
+			      <p class="text-warning" id=""></p>
+			    </div>
+			    <div class="form-group text-center">
+			      <label>Story body</label>
+			        {{ form.body }}
+			      <p class="text-warning" id=""></p>
+			    </div>
+			    <div class="form-group text-center"><button type="submit" class="btn btn-primary">Update</button>
+			    </div>
+			</form>		
+		</div>
+	</div>
+</div>

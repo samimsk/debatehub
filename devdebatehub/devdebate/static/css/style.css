@@ -1,0 +1,48 @@
+#id_profileimage{
+	background-color: #999;
+}
+#signupbutton{
+	margin-top: 8px;
+}
+#spacing{
+	margin-right: 10px;
+}
+.navcolor{
+	background-color: #7ad3b7;
+}
+.registration{
+	background-color: #eee;
+	border: 1px solid #ddd;
+    border-radius: 3px;
+}
+.bordr{
+	border: 1px solid #ddd;
+}
+#menuloggedin{
+	margin-top: 8px;
+}
+select{
+	width: 100%;
+    height: 30px;
+    border: 1px solid #ddd;
+}
+
+#followsuccess{
+	color: #49ff00;
+}
+@media (max-width: 767px){
+	#menuloggedin{
+		color: #fff;
+		text-align: center;
+	}
+	#changecolortowhite{
+		color: #fff;
+		background-color: #3c763d;
+	}
+}
+#feedfilter{
+	padding: 10px;
+	text-decoration: none;
+	background-color: #efefef;
+}
+

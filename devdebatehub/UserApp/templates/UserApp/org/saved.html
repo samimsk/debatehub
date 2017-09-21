@@ -1,0 +1,22 @@
+{% include "navbar/nav.html" %}
+{% load staticfiles %}
+<div class="container">
+	<br>
+	<br>
+	<div class="row">
+		<div class="col-lg-3">
+			<ul class="list-group" style="border-radius: 0px; ">
+				<li class="list-group-item" style="background-color: #7AD3B7; color: #fff;"><h4>DASHBOARD</h4></li>
+				<li class="list-group-item" style="background-color: {{ background }}">Edit Profile</li>
+				<li class="list-group-item">Edit personal info</li>
+				<li class="list-group-item">Create a new debate</li>
+				<li class="list-group-item">Publish a blog post</li>
+				<li class="list-group-item">Update Stories</li>
+			</ul>
+		</div>
+		<div class="col-lg-8 text-center">
+    <a href="{% url 'dashboard' request.user.username %}">Back to dashboard</a>
+			<h4>{{ message }} {{ error }} {{ passworderror }}</h4>
+		</div>
+	</div>
+</div>

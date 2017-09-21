@@ -1,0 +1,30 @@
+{% load staticfiles %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+
+<div class="jumbotron">
+	<div class="row" style="margin: auto;">
+		<div class="loginform text-center" >
+    <br>
+    <p><a href="/"><strong>Back to Home|</strong></a></p>
+		    <form class="" action="{% url 'auth' %}" method="post" style="max-width: 330px; padding: 15px; margin: 0 auto; background-color: #eee; padding: 50px;">{% csrf_token %}
+              <div class="form-group">
+                <p><strong>Credentials did'not match!
+                Type you email and password again!</strong></p>
+              </div>
+              <div class="form-group">
+                <input type="text" placeholder="Email" class="form-control" name='email' style="border: 1px solid rgb(221, 221, 221);">
+              </div>
+              <br>
+              <div class="form-group">
+                <input type="password" placeholder="Password" class="form-control" name="password"	style="border: 1px solid rgb(221, 221, 221);">
+              </div>
+              <button type="submit" class="btn btn-success">Login</button>
+              <br>
+              <br>
+              <p>Click here to request for new password!</p>
+            </form>
+		</div>
+	</div>
+</div>

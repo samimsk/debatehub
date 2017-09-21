@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<!-- saved from url=(0071)https://docs.djangoproject.com/en/1.11/topics/db/examples/many_to_many/ -->
+<html lang="en" class=" mdzr-js mdzr-borderradius mdzr-boxshadow mdzr-cssanimations mdzr-svg"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ROBOTS" content="ALL">
+    <meta http-equiv="imagetoolbar" content="no">
+    <meta name="MSSmartTagsPreventParsing" content="true">
+    <meta name="Copyright" content="Django Software Foundation">
+    <meta name="keywords" content="Python, Django, framework, open-source">
+    <meta name="description" content="">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="https://docs.djangoproject.com/s/img/icon-touch.e4872c4da341.png">
+    <link rel="icon" sizes="192x192" href="https://docs.djangoproject.com/s/img/icon-touch.e4872c4da341.png">
+    <link rel="shortcut icon" href="https://docs.djangoproject.com/s/img/favicon.6dbf28c0650e.ico">
+    <meta name="msapplication-TileColor" content="#113228">
+    <meta name="msapplication-TileImage" content="/s/img/icon-tile.b01ac0ef9f67.png">
+
+    <title>Many-to-many relationships | Django documentation | Django</title>
+
+    <link rel="stylesheet" href="./Many-to-many relationships _ Django documentation _ Django_files/output.5f8483691d8b.css">
+    <script src="./Many-to-many relationships _ Django documentation _ Django_files/webfontloader.e75218f5f090.js.download"></script>
+    <link rel="stylesheet" href="./Many-to-many relationships _ Django documentation _ Django_files/css"><script>
+    WebFont.load({
+      custom: {
+        families: ['FontAwesome', 'Fira+Mono'],
+      },
+      google: {
+        families: ['Roboto:400italic,700italic,300,700,400:latin'
+        ]
+      },
+      classes: false,
+      events: false,
+      timeout: 1000
+    });
+    </script>
+    <script src="./Many-to-many relationships _ Django documentation _ Django_files/modernizr.3b36762e418a.js.download"></script>
+    
+  
+    
+      
+    
+  
+  <link rel="canonical" href="https://docs.djangoproject.com/en/1.11/topics/db/examples/many_to_many/">
+  
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="el" href="https://docs.djangoproject.com/el/1.11/topics/db/examples/many_to_many/">
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="x-default" href="https://docs.djangoproject.com/en/1.11/topics/db/examples/many_to_many/">
+        
+        <link rel="alternate" hreflang="en" href="https://docs.djangoproject.com/en/1.11/topics/db/examples/many_to_many/">
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="es" href="https://docs.djangoproject.com/es/1.11/topics/db/examples/many_to_many/">
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="fr" href="https://docs.djangoproject.com/fr/1.11/topics/db/examples/many_to_many/">
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="id" href="https://docs.djangoproject.com/id/1.11/topics/db/examples/many_to_many/">
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="ja" href="https://docs.djangoproject.com/ja/1.11/topics/db/examples/many_to_many/">
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="ko" href="https://docs.djangoproject.com/ko/1.11/topics/db/examples/many_to_many/">
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="pl" href="https://docs.djangoproject.com/pl/1.11/topics/db/examples/many_to_many/">
+    
+        
+          
+        
+        
+        <link rel="alternate" hreflang="pt-br" href="https://docs.djangoproject.com/pt-br/1.11/topics/db/examples/many_to_many/">
+    
+  
+
+  <link rel="search" type="application/opensearchdescription+xml" href="https://docs.djangoproject.com/en/1.11/search/description/" title="Django documentation">
+
+  </head>
+
+  <body id="generic" class="">
+
+    <div role="banner" id="top">
+  <div class="container">
+    <a class="logo" href="https://www.djangoproject.com/">Django</a>
+    <p class="meta">The web framework for perfectionists with deadlines.</p>
+    <div role="navigation">
+      <ul>
+        <li>
+          <a href="https://www.djangoproject.com/start/overview/">Overview</a>
+        </li>
+        <li>
+          <a href="https://www.djangoproject.com/download/">Download</a>
+        </li>
+        <li class="active">
+          <a href="https://docs.djangoproject.com/">Documentation</a>
+        </li>
+        <li>
+          <a href="https://www.djangoproject.com/weblog/">News</a>
+        </li>
+        <li>
+          <a href="https://www.djangoproject.com/community/">Community</a>
+        </li>
+        <li>
+          <a href="https://code.djangoproject.com/">Code</a>
+        </li>
+        <li>
+          <a href="https://www.djangoproject.com/foundation/">About</a>
+        </li>
+        <li>
+          <a href="https://www.djangoproject.com/fundraising/">♥ Donate</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+    <div class="copy-banner">
+      <div class="container">
+        
+  <h1><a href="https://docs.djangoproject.com/en/1.11/">Documentation</a></h1>
+
+      </div>
+    </div>
+    <div id="billboard"></div>
+
+    <div class="container sidebar-right">
+      <div role="main">
+
+        
+          
+        
+
+        
+<div id="version-switcher">
+  <ul id="doc-languages" class="language-switcher">
+  
+  
+  <li class="other">
+    
+      
+    
+    <a href="https://docs.djangoproject.com/el/1.11/topics/db/examples/many_to_many/">el</a>
+  </li>
+  
+  
+  
+  
+  
+  <li class="other">
+    
+      
+    
+    <a href="https://docs.djangoproject.com/es/1.11/topics/db/examples/many_to_many/">es</a>
+  </li>
+  
+  
+  
+  <li class="other">
+    
+      
+    
+    <a href="https://docs.djangoproject.com/fr/1.11/topics/db/examples/many_to_many/">fr</a>
+  </li>
+  
+  
+  
+  <li class="other">
+    
+      
+    
+    <a href="https://docs.djangoproject.com/id/1.11/topics/db/examples/many_to_many/">id</a>
+  </li>
+  
+  
+  
+  <li class="other">
+    
+      
+    
+    <a href="https://docs.djangoproject.com/ja/1.11/topics/db/examples/many_to_many/">ja</a>
+  </li>
+  
+  
+  
+  <li class="other">
+    
+      
+    
+    <a href="https://docs.djangoproject.com/ko/1.11/topics/db/examples/many_to_many/">ko</a>
+  </li>
+  
+  
+  
+  <li class="other">
+    
+      
+    
+    <a href="https://docs.djangoproject.com/pl/1.11/topics/db/examples/many_to_many/">pl</a>
+  </li>
+  
+  
+  
+  <li class="other">
+    
+      
+    
+    <a href="https://docs.djangoproject.com/pt-br/1.11/topics/db/examples/many_to_many/">pt-br</a>
+  </li>
+  
+  
+    <li class="current" title="Click on the links on the left to switch to another language.">
+      <span>Language: <strong>en</strong></span>
+    </li>
+  </ul>
+
+  
+  <ul id="doc-versions" class="version-switcher">
+    
+    
+    <li class="other">
+      
+        
+      
+      <a href="https://docs.djangoproject.com/en/1.7/topics/db/examples/many_to_many/">1.7</a>
+    </li>
+    
+    
+    
+    <li class="other">
+      
+        
+      
+      <a href="https://docs.djangoproject.com/en/1.8/topics/db/examples/many_to_many/">1.8</a>
+    </li>
+    
+    
+    
+    <li class="other">
+      
+        
+      
+      <a href="https://docs.djangoproject.com/en/1.9/topics/db/examples/many_to_many/">1.9</a>
+    </li>
+    
+    
+    
+    <li class="other">
+      
+        
+      
+      <a href="https://docs.djangoproject.com/en/1.10/topics/db/examples/many_to_many/">1.10</a>
+    </li>
+    
+    
+    
+    
+    
+    <li class="other">
+      
+        
+      
+      <a href="https://docs.djangoproject.com/en/dev/topics/db/examples/many_to_many/">dev</a>
+    </li>
+    
+    
+    <li class="current" title="This document describes Django 1.11. Click on the links on the left to see other versions.">
+       <span>Documentation version:
+         <strong>1.11</strong>
+       </span>
+    </li>
+  </ul>
+</div>
+
+
+<div id="docs-content">
+<div class="section" id="s-many-to-many-relationships">
+<span id="many-to-many-relationships"></span><h1>Many-to-many relationships<a class="headerlink" href="https://docs.djangoproject.com/en/1.11/topics/db/examples/many_to_many/#many-to-many-relationships" title="Permalink to this headline">¶</a></h1>
+<p>To define a many-to-many relationship, use
+<a class="reference internal" href="https://docs.djangoproject.com/en/1.11/ref/models/fields/#django.db.models.ManyToManyField" title="django.db.models.ManyToManyField"><code class="xref py py-class docutils literal"><span class="pre">ManyToManyField</span></code></a>.</p>
+<p>In this example, an <code class="docutils literal"><span class="pre">Article</span></code> can be published in multiple <code class="docutils literal"><span class="pre">Publication</span></code>
+objects, and a <code class="docutils literal"><span class="pre">Publication</span></code> has multiple <code class="docutils literal"><span class="pre">Article</span></code> objects:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Publication</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>              <span class="c1"># __unicode__ on Python 2</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'title'</span><span class="p">,)</span>
+
+<span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">headline</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">publications</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Publication</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>              <span class="c1"># __unicode__ on Python 2</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">headline</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'headline'</span><span class="p">,)</span>
+</pre></div>
+</div>
+<p>What follows are examples of operations that can be performed using the Python
+API facilities. Note that if you are using <a class="reference internal" href="https://docs.djangoproject.com/en/1.11/topics/db/models/#intermediary-manytomany"><span class="std std-ref">an intermediate model</span></a> for a many-to-many relationship, some of the related
+manager’s methods are disabled, so some of these examples won’t work with such
+models.</p>
+<p>Create a couple of <code class="docutils literal"><span class="pre">Publications</span></code>:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Publication</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'The Python Journal'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">Publication</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Science News'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p3</span> <span class="o">=</span> <span class="n">Publication</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Science Weekly'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p3</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Create an <code class="docutils literal"><span class="pre">Article</span></code>:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a1</span> <span class="o">=</span> <span class="n">Article</span><span class="p">(</span><span class="n">headline</span><span class="o">=</span><span class="s1">'Django lets you build Web apps easily'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can’t associate it with a <code class="docutils literal"><span class="pre">Publication</span></code> until it’s been saved:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a1</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">'Article' instance needs to have a primary key value before a many-to-many relationship can be used.</span>
+</pre></div>
+</div>
+<p>Save it!</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Associate the <code class="docutils literal"><span class="pre">Article</span></code> with a <code class="docutils literal"><span class="pre">Publication</span></code>:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a1</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create another <code class="docutils literal"><span class="pre">Article</span></code>, and set it to appear in both <code class="docutils literal"><span class="pre">Publications</span></code>:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a2</span> <span class="o">=</span> <span class="n">Article</span><span class="p">(</span><span class="n">headline</span><span class="o">=</span><span class="s1">'NASA uses Python'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a2</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a2</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a2</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Adding a second time is OK:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a2</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Adding an object of the wrong type raises <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.6)"><code class="xref py py-exc docutils literal"><span class="pre">TypeError</span></code></a>:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a2</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">'Publication' instance expected</span>
+</pre></div>
+</div>
+<p>Create and add a <code class="docutils literal"><span class="pre">Publication</span></code> to an <code class="docutils literal"><span class="pre">Article</span></code> in one step using
+<a class="reference internal" href="https://docs.djangoproject.com/en/1.11/ref/models/relations/#django.db.models.fields.related.RelatedManager.create" title="django.db.models.fields.related.RelatedManager.create"><code class="xref py py-meth docutils literal"><span class="pre">create()</span></code></a>:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_publication</span> <span class="o">=</span> <span class="n">a2</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Highlights for Children'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Article</span></code> objects have access to their related <code class="docutils literal"><span class="pre">Publication</span></code> objects:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a1</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Publication: The Python Journal&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a2</span><span class="o">.</span><span class="n">publications</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Publication: Highlights for Children&gt;, &lt;Publication: Science News&gt;, &lt;Publication: Science Weekly&gt;, &lt;Publication: The Python Journal&gt;]&gt;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Publication</span></code> objects have access to their related <code class="docutils literal"><span class="pre">Article</span></code> objects:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">article_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Article: NASA uses Python&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span><span class="o">.</span><span class="n">article_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Article: Django lets you build Web apps easily&gt;, &lt;Article: NASA uses Python&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">article_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Article: NASA uses Python&gt;]&gt;</span>
+</pre></div>
+</div>
+<p>Many-to-many relationships can be queried using <a class="reference internal" href="https://docs.djangoproject.com/en/1.11/topics/db/queries/#lookups-that-span-relationships"><span class="std std-ref">lookups across
+relationships</span></a>:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications__id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Article: Django lets you build Web apps easily&gt;, &lt;Article: NASA uses Python&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications__pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Article: Django lets you build Web apps easily&gt;, &lt;Article: NASA uses Python&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Article: Django lets you build Web apps easily&gt;, &lt;Article: NASA uses Python&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications</span><span class="o">=</span><span class="n">p1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Article: Django lets you build Web apps easily&gt;, &lt;Article: NASA uses Python&gt;]&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications__title__startswith</span><span class="o">=</span><span class="s2">"Science"</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Article: NASA uses Python&gt;, &lt;Article: NASA uses Python&gt;]&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications__title__startswith</span><span class="o">=</span><span class="s2">"Science"</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Article: NASA uses Python&gt;]&gt;</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="https://docs.djangoproject.com/en/1.11/ref/models/querysets/#django.db.models.query.QuerySet.count" title="django.db.models.query.QuerySet.count"><code class="xref py py-meth docutils literal"><span class="pre">count()</span></code></a> function respects
+<a class="reference internal" href="https://docs.djangoproject.com/en/1.11/ref/models/querysets/#django.db.models.query.QuerySet.distinct" title="django.db.models.query.QuerySet.distinct"><code class="xref py py-meth docutils literal"><span class="pre">distinct()</span></code></a> as well:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications__title__startswith</span><span class="o">=</span><span class="s2">"Science"</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="go">2</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications__title__startswith</span><span class="o">=</span><span class="s2">"Science"</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="go">1</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications__in</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Article: Django lets you build Web apps easily&gt;, &lt;Article: NASA uses Python&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publications__in</span><span class="o">=</span><span class="p">[</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">])</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Article: Django lets you build Web apps easily&gt;, &lt;Article: NASA uses Python&gt;]&gt;</span>
+</pre></div>
+</div>
+<p>Reverse m2m queries are supported (i.e., starting at the table that doesn’t have
+a <a class="reference internal" href="https://docs.djangoproject.com/en/1.11/ref/models/fields/#django.db.models.ManyToManyField" title="django.db.models.ManyToManyField"><code class="xref py py-class docutils literal"><span class="pre">ManyToManyField</span></code></a>):</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Publication: The Python Journal&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Publication: The Python Journal&gt;]&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">article__headline__startswith</span><span class="o">=</span><span class="s2">"NASA"</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Publication: Highlights for Children&gt;, &lt;Publication: Science News&gt;, &lt;Publication: Science Weekly&gt;, &lt;Publication: The Python Journal&gt;]&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">article__id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Publication: The Python Journal&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">article__pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Publication: The Python Journal&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">article</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Publication: The Python Journal&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">article</span><span class="o">=</span><span class="n">a1</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Publication: The Python Journal&gt;]&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">article__in</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Publication: Highlights for Children&gt;, &lt;Publication: Science News&gt;, &lt;Publication: Science Weekly&gt;, &lt;Publication: The Python Journal&gt;]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Publication</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">article__in</span><span class="o">=</span><span class="p">[</span><span class="n">a1</span><span class="p">,</span><span class="n">a2</span><span class="p">])</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+<span class="go">&lt;QuerySet [&lt;Publication: Highlights for Children&gt;, &lt;Publication: Science News&gt;, &lt;Publication: Science Weekly&gt;, &lt;Publication: The Python Journal&gt;]&gt;</span>
+</pre></div>
+</div>
+<p>Excluding a related item works as you would expect, too (although the SQL
+involved is a little complex):</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">publications</span><span class="o">=</span><span class="n">p2</span><span class="p">)</span>
+<span class="go">&lt;QuerySet [&lt;Article: Django lets you build Web apps easily&gt;]&gt;</span>
+</pre></div>
+</div>
+<p>If we delete a <code class="docutils literal"><span class="pre">Publication</span></code>, its <code class="docutils literal"><span class="pre">Articles</span></code> won’t be able to access it:</p></div></div></div></div></body></html>

@@ -1,0 +1,104 @@
+{% load staticfiles %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+
+
+<!-- static javascripts -->
+<script src="{% static 'javascripts/jquery.min.js' %}"></script>
+<script src="{% static 'javascripts/bootstrap.js' %}"></script>
+<div class="jumbotron">
+  <div class="row" style="margin: auto;">
+    <div class="loginform text-center" >
+    <br>
+    <p><a href="/"><strong>Back to Home|</strong></a></p>
+    <div class="text-center" id="sucessemail"></div>
+    <div id="orgregform">
+      <form action="{% url 'register_org' %}" method="post" id = "registerorg" style="max-width: 330px; margin: 0 auto; background-color: #eee; padding: 50px;">
+      <p><strong>Create an organisation acccount.</strong></p>
+      {% csrf_token %}
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          {{ form1.email }}
+          <p class="text-warning" id="erroremailorg"></p>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Username</label>
+          {{ form1.username }}
+          <p class="text-warning" id="errorusernameorg"></p>
+        </div>
+        <div class="form-group">
+          <label for="">Select type of org</label>
+          {{ form1.usertype }}
+          <p class="text-warning" id="errorusertypeorg"></p>
+        </div>
+        <div class="form-group">
+          <label for="">Enter password</label>
+          {{ form1.password1 }}
+          <p class="text-warning" id="errorpassword1org"></p>
+        </div>
+        <div class="form-group">
+          <label for="">Re-enter password</label>
+          {{ form1.password2 }}
+          <p class="text-warning" id="errorpassword2org"></p>
+        </div>
+        <button type="submit" class="btn btn-primary">register</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $('#registerorg').on('submit', function(event){
+    console.log("form submitted - org!");
+    $('#erroremailorg').empty();
+    $('#errorusernameorg').empty();
+    $('#errorpassword1org').empty();
+    console.log($('#id_usertype').val());// sanity check
+    submitfuncorg();
+    event.preventDefault();
+    return false; 
+});
+
+function submitfuncorg() {
+    console.log("still create post is working!") // sanity check
+    $.ajax({
+        url : "{% url 'register_org' %}", // the endpoint
+        type : "POST", // http method
+        data : { 
+        email       : $('#emailfieldorg').val(), 
+        username    : $('#usernamefieldorg').val(),
+        password1   : $('#passwordfield1').val(),
+        password2   : $('#passwordfield2').val(),
+        dob         : $('#dobfieldorg').val(),
+        usertype    : $('#id_usertype').val(),
+        },
+        // handle a successful response
+        success : function(json) {
+            var output = JSON.parse(json);
+            if (output["success"]) {
+                $('#orgregform').empty();
+                $('#sucessemail').html("<br><br><br><p>Thanks for registering<br>Please go  to mailbox and confirm your account</p>");
+            } 
+            // remove the value from the input
+            console.log(json);
+            
+            $('#erroremailorg').html(output["emailvailidation"]);
+            $('#errorusernameorg').html(output["usernamevailidation"]);
+            $('#errorusertypeorg').html( output["usertypeerror"]);
+            $('#errorpassword1org').html( output["passwordmismatch"]);
+
+            console.log("success"); // another sanity check
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+};
+</script>
+
+<script src="{% static 'javascripts/secure.js' %}"></script>

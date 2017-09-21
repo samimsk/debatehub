@@ -1,0 +1,228 @@
+{% extends 'navbar/nav.html' %}
+{% load staticfiles %}
+{% block title %} Title {% endblock %}
+{% block content %}
+<style type="text/css">
+	#heading{
+		border-radius: 5px;
+	}
+	#desc{
+		border-radius: 5px;
+	}
+</style>
+<div class="container">
+	<div class="row text-center" >
+	<br>
+	<br>
+		<div style="border: 1px solid rgba(63, 81, 181, 0.26);; background-color: #fff; padding-left: 7%; padding-right: 7%; padding-top: 3%; border-radius: 10px;">
+		<h3 style="color: #999;">{{ debate.title }}</h3>
+		<br>
+		<h4>{{ debate.description }}</h4>
+		<br>
+		<p style="color: #999;">Hosted by : <strong>{{ debate.hostedby.username }}</strong></p>
+		<p style="color: #999;">OPINION COUNT &nbsp : &nbsp {{ opinionscount }}</p>
+		<br>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ debate.stat }}%; background-color: #4CAF50;">
+				{{ debate.stat }}%
+				</div>
+			</div>
+			<br>
+
+			{% if showsupport %}
+			<button type="button" class="btn btn-info" onclick="supportfunc()" id = "support" >Support({{ supporter }})</button>
+			{% else %}
+			<button type="button" class="btn btn-warning" onclick="undosupportfunc()" id = "support" >Supported({{ supporter }})</button>
+			{% endif %}
+
+			<br>
+			<br>
+		</div>
+	</div>
+	<br><br>
+	<div class="row text-center">
+		<button class="btn" id = "foropinion" onclick="foropinionfunc()">Write Your Opinion</button>
+		<br>
+		<br>
+		<div id = "displayopinionform" class=".col-md-6 .col-md-offset-3" style = "padding-left: 10%; padding-right: 10%;">
+            <form action="{% url 'submitopinion' debate.id %}" method="post" id = "submitopinion">
+            {% csrf_token %}
+                <div class="form-group text-center">
+                  <label>Heading</label>
+                    {{ form.title }}
+                    <p id = "headinglength">(100)</p>
+                  <p class="text-warning" id="erroremail"></p>
+                </div>
+                <div class="form-group text-center">
+                  <label>Description</label>
+                    {{ form.description }}
+                    <p id = "desclength">(100)</p>
+                  <p class="text-warning" id="erroremail"></p>
+                </div>
+                <div class="form-group text-center">
+                  <label>Uncheck the button to post against:</label>&nbsp
+                    {{ form.fororagainst }}
+                  <p class="text-warning" id="erroremail"></p>
+                </div>
+                <div class="form-group text-center"><button type="submit" class="btn btn-primary">Post</button></div>
+            </form>
+		</div>
+	</div>
+	<div class="row ">
+		<div class="col-md-6 text-center">
+		<br>
+		<br>
+		{% for opinion in opinions %}
+			{% if opinion.fororagainst == True %}
+			<div style="border: 1px solid rgba(63, 81, 181, 0.26);; background-color: #fff; padding-left: 7%; padding-right: 7%; padding-top: 3%; border-radius: 7px;" >
+				{% if opinion.title %}
+				<h4 style="color: #999;">{{ opinion.title }}</h4>
+				{% else %}
+				<h4 style="color: #999;">No Title</h4>
+				{% endif %}
+				<p>
+				{{ opinion.description }}
+				</p>
+				<br>
+				<p style="color: #999;">Opinion By &nbsp : &nbsp <a href="{% url 'profile' opinion.opinionby.username %}" style="text-decoration: none; color: color: #5bc0de;">{{ opinion.opinionby.username }}</a> &nbsp &nbsp &nbsp &nbsp
+				<strong>Comments(978)</strong>
+				</p>
+
+				<button type="button" class="btn btn-info" onclick="legitfunc('{{ opinion.id }}')" id = "opinion_{{ opinion.id }}" >Legit( {{ opinion.legit }} )</button>
+				<br>
+				<br>
+			</div>
+			<br>
+			<br>
+			{% endif %}
+		{% endfor %}
+		</div>
+		<div class="col-md-6 text-center">
+		<br>
+		<br>
+		{% for opinion in opinions %}
+			{% if opinion.fororagainst == False %}
+			<div style="border: 1px solid rgba(63, 81, 181, 0.26);; background-color: #fff; padding-left: 7%; padding-right: 7%; padding-top: 3%; border-radius: 7px;" >
+				{% if opinion.title %}
+				<h4 style="color: #999;">{{ opinion.title }}</h4>
+				{% else %}
+				<h4 style="color: #999;">No Title</h4>
+				{% endif %}
+				<p>
+				{{ opinion.description }}
+				</p>
+				<br>
+				<p style="color: #999;">Opinion By &nbsp : &nbsp superuser15</p>
+
+				<button type="button" class="btn btn-danger" 
+				onclick="legitfunc('{{ opinion.id }}')" id = "opinion_{{ opinion.id }}">Legit( {{ opinion.legit }} )</button>
+				<br>
+				<br>
+			</div>
+			<br>
+			<br>
+			{% endif %}
+		{% endfor %}
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$("#displayopinionform").hide();
+	$("#displayopinionform_2").hide();
+	$("#foropinion").click(function(){
+		$("#displayopinionform").toggle(200);
+	});
+	$("#againstopinion").click(function(){
+		$("#displayopinionform_2").toggle(200);
+	});
+});
+
+function checklenchar(){
+	var head = $("#heading").val();
+	$("#headinglength").html("Words left(" + (100 - head.length) + ")");
+	if(head.length > 100){
+		$("#heading").attr("readonly");
+	}
+	var desc = $("#desc").val();
+	$("#desclength").html("Words left(" + (1000 - desc.length) + ")");
+	if(desc.length > 1000){
+		$("#desc").attr("readonly");
+	}
+}
+
+function supportfunc(){
+	console.log("support function invoked");
+	$.ajax({
+		url 	: "{% url 'votefor' debate.id %}",
+		type 	: "POST",
+		success	: function(json){
+			var output = JSON.parse(json);
+			if(output["showunvotefor"]){
+				$("#support").html("Supported(" + output["supporter"] + ")");
+				$("#support").attr("class", "btn btn-warning");
+				$("#support").attr("onclick", "undosupportfunc()");
+ 
+			}
+		}
+	})
+}
+
+function undosupportfunc(){
+	console.log("undoing support");
+	$.ajax({
+		url 	: "{% url 'unvotefor' debate.id %}",
+		type 	: "POST",
+		success : function(json){
+			var output = JSON.parse(json);
+			if(output["showvotefor"]){
+				$("#support").html("Support(" + output["supporter"] + ")");
+				$("#support").attr("class", "btn btn-info");
+				$("#support").attr("onclick", "supportfunc()");
+			}
+
+		}
+	})
+}
+
+$("#submitopinion").on('submit', function(event){
+	submitopinionfunc();
+	event.preventDefault();
+});
+
+function submitopinionfunc(){
+	console.log("Submit opinion invoked! ");
+	$.ajax({
+		url 	: "{% url 'submitopinion' debate.id %}",
+		type 	: "POST",
+		data	: {
+			title : $("#heading").val(),
+			description : $("#desc").val(),
+			fororagainst : $("#myonoffswitch").val()
+		},
+		success : function(json){
+			var output = JSON.parse(json);
+			$("#displayopinionform").html(output["message"]);
+			$("#submitopinion").hide();
+		}
+	});
+}
+
+function legitfunc(opinion_id){
+	console.log("legitfunc invoked")
+	increaselegitcount = "#opinion_" + opinion_id
+	$.ajax({
+		url 	: "/legit/{{ debate.id }}/" + opinion_id + "/",
+		type 	: "POST",
+		success : function(json){
+			var output = JSON.parse(json);
+			$(increaselegitcount).html("Legit( " + output["legitcount"] + " )");
+
+		} 
+	})
+}
+
+</script>
+<script src="{% static 'javascripts/secure.js' %}"></script>
+{% endblock %}

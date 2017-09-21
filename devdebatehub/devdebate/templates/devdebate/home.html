@@ -1,0 +1,150 @@
+    {% extends 'navbar/nav.html' %}
+    {% load staticfiles %}
+    {% block title %}Connect with like minded peers and impose or accept opinion.{% endblock %}
+    {% block content %}
+<style type="text/css">
+  .new{
+    background-image: url("{% static 'images/cover.jpg' %}");
+  }
+</style>
+    <div class="jumbotron">
+    	<div class="container-fluid new">
+        	<div class="row">
+          <div class="col-md-3 col-md-offset-3">
+                <div class="loginform text-center" >
+                <br>
+                  <form class="" action="{% url 'auth' %}" method="post" style="max-width: 330px; margin: 0 auto; background-color: #eee; padding: 43px;">{% csrf_token %}
+                    <div class="form-group">
+                      <p><strong>
+                      Type in your email and password!</strong></p>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" placeholder="Email" class="form-control" name='email' style="border: 1px solid rgb(221, 221, 221);">
+                    </div>
+                    <br>
+                    <div class="form-group">
+                      <input type="password" placeholder="Password" class="form-control" name="password"  style="border: 1px solid rgb(221, 221, 221);">
+                    </div>
+                    <button type="submit" class="btn btn-success">Login</button>
+                    <br>
+                    <br>
+                    <p>Click here to request for new password!</p>
+                    <br>
+                    <p><strong>Are you a part of an organisation? <br><a href="/user/registration/organisation/" style="font-size: 13px;">Create an organisation channel here!</a></strong></p>
+                  </form>
+                  <p style="color: #fff;">New user? &nbsp <button id= "signupbutton" type="submit" class="btn btn-success" data-toggle="modal" 
+                  data-target="#basicModal">Sign up</button>
+                </div></p>
+          </div>
+          </div>
+      </div>
+    </div>
+      <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header text-center">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel"><strong>SIGN UP</strong></h4>
+            </div>
+            <br>
+            <br>
+            <div class="text-center" id="home" style="width: 50%; margin: auto;">
+              <form action="{% url 'register_person' %}" method="post" id = "registrationform">
+              {% csrf_token %}
+                <div class="form-group text-center">
+                  <label>Email address</label>
+                    {{ form.email }}
+                  <p class="text-warning" id="erroremail"></p>
+                </div>
+                <div class="form-group text-center">
+                  <label>Username</label>
+                  {{ form.username }}
+                  <p class="text-warning" id="errorusername"></p>
+                </div>
+                <div class="form-group text-center">
+                  <label>Password</label>
+                    {{ form.password1 }}
+                  <p class="text-warning" id=""></p>
+                </div>
+                <div class="form-group text-center">
+                  <label>Re-enter Password</label>
+                  {{ form.password2 }}
+                  <p class="text-warning" id="errorpassword"></p>
+                </div>
+
+                <div class="form-group text-center"><button type="submit" class="btn btn-primary">register</button></div>
+              </form>
+            </div>
+            <div class="text-center" id="result"></div>
+              <div class="text-center">
+                <p>OR</p>
+                <p>Sign up using <strong>gmail</strong><strong> | fb</strong></p>
+              </div>
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    <footer style="background-color: #eee;">
+    <div class="text-center" >
+    <br>
+      <p>Demo by : Sk Samim Rana</p>
+      <p>Contact information: <a href="mailto:samimsk007@gmail.com">
+  samimsk007@gmail.com</a>.</p>
+    </div>
+    <br>
+    </footer>
+    <script type="text/javascript">
+          
+      $('#registrationform').on('submit', function(event){
+        console.log("form submitted!");
+        $('#erroremail').empty();
+        $('#errorusername').empty();
+        $('#errorpassword').empty();  // sanity check
+        submitfunc();
+        event.preventDefault();
+        return false; 
+
+      });
+
+      function submitfunc() {
+        console.log("create post is still working!") // sanity check
+        $.ajax({
+            url : "user/person-registration/", // the endpoint
+            type : "POST", // http method
+            data : { 
+            email       : $('#emailfield').val(), 
+            username    : $('#usernamefield').val(),
+            password1   : $('#passwordfield1').val(),
+            password2   : $('#passwordfield2').val(), 
+            },
+             // data sent with the post request
+            // handle a successful response
+            success : function(json) {
+                var output = JSON.parse(json);
+                if (output["success"]) {
+                    $('#home').empty();
+                    $('#result').html("<br><br><br><p>Thanks for registering<br>Please go  to mailbox and confirm your account</p>");
+                } 
+                // remove the value from the input
+                console.log(json);
+                
+                $('#erroremail').html(output["emailvailidation"]);
+                $('#errorusername').html(output["usernamevailidation"]);
+                $('#errorpassword').html( output["passwordmismatch"]);
+
+                console.log("success"); // another sanity check
+            },
+
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                    " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+        });
+      };
+    </script>
+    <script src="{% static 'javascripts/secure.js' %}"></script>
+
+     {% endblock %}

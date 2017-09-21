@@ -1,0 +1,134 @@
+{% include "navbar/nav.html" %}
+{% load staticfiles %}
+<br>
+<br>
+<div class="container">
+	<div class="row">
+		<div class="jumbotron">
+			<div class="row">
+				<div class="col-lg-3">
+			        {% if org.photo %}
+			            <img src ="{{ org.photo.url }}" style="width: 60%; border: 2px solid #fff; border-radius: 50%; display: block; margin: auto;">
+			        {% else %}
+			            <img src ="{% static 'images/person-icon.png' %}" style="width: 60%; border: 2px solid #fff; border-radius: 50%; display: block; margin: auto; margin-top: 15%;">
+			        {% endif %}
+				</div>
+				<div class="col-lg-9 text-center" style="margin-left: auto;">
+					<br>
+					<br>
+					{% if orgdetails.name  %}
+					<p>
+						{{ orgdetails.name }}
+					</p>
+					{% else %}
+					<p>
+					{{ org.username }}
+					</p>
+					{% endif %}
+					<br>
+
+					{% if orgdetails.details %}
+					<p>
+						{{ orgdetails.details }}
+					</p>
+					{% else %}
+					<p>
+					{{ orgdetails.name }} have not added any details yet.
+					</p>
+					{% endif %}
+					
+					<h5 style="color: #9e9e9e"><strong>Following({{ following }}) | Followers({{ followers }})</strong></h5>
+				    <br>
+				    	{% if cannotfollow == False%}
+				    	<div id = "deletelink" >
+				    	   <a href="{% url 'follow_user' org.username %}"><button type="button" class="btn btn-primary" id = "followbutton">Follow</button></a>
+				    	</div>
+				    	<div id ="confirmfollow"></div> 
+				    	<br>
+				    	{% endif %}
+				</div>
+			</div>
+			<br>
+			<ul class="nav nav-tabs" style="border-bottom: 1px solid #ccc;">
+	      		<li role="presentation" class="usermenu"><a href="#" style="{{ highlight }}">About</a></li>
+	      		<li role="presentation" class="usermenu"><a href="{% url 'blog' org.username %}"
+	      			style="color: #757575;">Blogs</a></li>
+	      		<li role="presentation" class="usermenu"><a href="{% url 'debatehosted' org.username %}"
+	      			style="color: #757575;">Debate hosted</a></li>
+	      		{% if org.username == request.user.username %}
+	      		<li role="presentation" class="usermenu"><a href="{% url 'dashboard' org.username %}"
+	      			style="color: #757575; ">Dashboard</a></li>
+	      		{% endif %}
+	    	</ul>
+	    	<br>
+	    	<br>
+	    	<div class="row text-center" style="padding-left: 7%; padding-right: 7%; ">
+	    		{% if orgdetails.location %}
+	    		<p><strong>Location &nbsp :</strong>&nbsp{{ orgdetails.location }}</p>
+	    		{% else %}
+	    		<p><strong>Location &nbsp :</strong>&nbsp Not avilable</p>
+	    		{% endif %}
+	    		<br>
+	    		{% if org.usertype %}
+	    		<p><strong>Type of organisation &nbsp :</strong>&nbsp{{ org.usertype }}</p>
+	    		{% else %}
+	    		<p><strong>Type of organisation &nbsp :</strong>&nbsp Not avilable</p>
+	    		{% endif %}
+	    	<br>
+	    	<h3>LATEST STORIES</h3>
+	    	<br>{% if stories %}
+	    		{% for story in stories %}
+	    		<div style="border-bottom: 2px solid #eee; width: 50%; margin-left: auto;margin-right: auto;">
+	    			<h4>{{ story.heading }}</h4>
+	    			<p>{{ story.body }}</p>
+	    		</div>
+	    		{% endfor %}
+	    		{% endif %}
+	    		<br>
+	    	</div>
+		</div>
+	</div>
+</div>
+<script>
+	
+$('#followbutton').on('click', function(event){
+    console.log("follow function invoked");
+    followfunc();
+    event.preventDefault();
+    return false; 
+});
+
+function followfunc() {
+    console.log("followfunc running") // sanity check
+    $.ajax({
+        url : "{% url 'follow_user' org.username %}", // the endpoint
+        type : "POST", // http method
+        success : function(json) {
+            var output = JSON.parse(json);
+            if (output["success"]) {
+                $('#confirmfollow').html("<p id = 'followsuccess'>You have followed {{ person.username }}</p>");
+                $('#deletelink').empty();
+                console.log(json);
+            };
+            // remove the value from the input
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+};
+</script>
+<script src="{% static 'javascripts/secure.js' %}"></script>
+<footer style="background-color: #eee;">
+<div class="text-center" >
+<br>
+  <p>Demo by : Sk Samim Rana</p>
+  <p>Contact information: <a href="mailto:samimsk007@gmail.com">
+samimsk007@gmail.com</a>.</p>
+</div>
+<br>
+</footer>

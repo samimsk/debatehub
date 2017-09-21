@@ -1,0 +1,83 @@
+{% include "navbar/nav.html" %}
+{% load staticfiles %}
+<br>
+<br>
+<div class="container">
+	<div class="row">
+		<div class="col-md-3 text-center" style="border: 1px solid #fff; background-color: #e6e6e6;">
+			<br>
+			<br>
+          	<img src ="{% static 'images/5.jpg' %}" style="width: 60%; border: 2px solid #fff; border-radius: 50%; display: block; margin: auto;">
+          	<br>
+          	{% if persondetails.firstname or persondetails.lastname %}
+        	<h4>{{ persondetails.firstname }} {{ persondetails.lastname }}</h4>
+        	{% endif %}
+        	{% if persondetails.collage or persondetails.works_at %}
+        	<h5 style="color: #757575;">{{ persondetails.collage }}, {{ persondetails.works_at }}</h5>
+        	{% endif %}
+        	<h5 style="color: #9e9e9e"><strong>Following({{ following }}) | Followers({{ followers }})</strong></h5>
+        	<br>
+        	<button type="button" class="btn btn-primary">Follow</button>   
+        	<br>
+        	<br>
+        	{% if persondetails.details %}
+        	<p>"{{ persondetails.details }}"</p>
+        	{% endif %}
+		</div>
+		<div class="col-md-9" style="">
+			<div class="" style=" padding-left: 5%">
+				<br>
+				<br>
+				<ul class="nav nav-tabs" style="border-bottom: 1px solid #ccc;">
+	      			<li role="presentation" class="usermenu"><a href="{% url 'profile' person.username %}" style="color: #757575;">Activities</a></li>
+	      			<li role="presentation" class="usermenu"><a href="#" style="{{ highlight }}">person Details</a></li>
+	      			<li role="presentation" class="usermenu"><a href=""
+	      			style="color: #757575;">Messages</a></li>
+	    		</ul>
+			</div>
+			<div class="components" style="border-bottom: 1px solid #ccc;">
+	    		<br>
+	    		<br>
+	    		<div id = "listpost" style=" padding-left: 7%; padding-right: 7%">
+	    			<div style="padding: 15px; ">
+	    				<p style="text-align: center;">School: <strong>{{ persondetails.school }}</strong></p>
+	    				<p style="text-align: center;">Collage: <strong>{{ persondetails.collage }}</strong></p>
+	    				<p style="text-align: center;"> Currently working at: <strong>{{ persondetails.works_at }}</strong></p>
+	    				<br>
+	    				<p style="text-align: center; color: #9e9e9e">No of debate paticipated: <strong>{{ person.paricipation }} </strong></p>
+	    				
+	    			</div>
+	    			<br>
+	    			<div style=" padding-left: 10%; padding-right: 10%;">
+	    				<p style="text-align: center;">Popular opinions</p>
+	    				<ul>
+	    				
+	    				<li>Navs available in Bootstrap have shared markup, starting with the base .nav class, as well as shared states. Swap modifier classes to switch between each style <strong> Rating (4.2 star)</strong></li>
+	    				<br>
+	    				<li>Navs available in Bootstrap have shared markup, starting with the base .nav class, as well as shared states. Swap modifier classes to switch between each style <strong> Rating (4.2 star)</strong></li>
+	    				</ul>
+	    			</div>
+	    			<br>
+	    			<br>
+	    		</div>
+	    	</div>	
+		</div>	
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
