@@ -94,7 +94,7 @@ def createblog(request, user_name):
 			obj = form.save(commit = False)
 			obj.writtenby =  request.user
 			obj.save()
-			context['message'] = "You have added a new debate."
+			context['message'] = "You have added a new blog."
 			return render(request, 'UserApp/org/saved.html', context)
 		else:
 			context['Error creating blog']

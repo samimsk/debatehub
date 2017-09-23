@@ -99,6 +99,9 @@ def register_org(request):
 
             orgdetails = Organisation.objects.create(user = user)
             orgdetails.save()
+            followingfollowers = FollowingUser.objects.create(person = user)
+            followingfollowers.save()
+
             
         return JsonResponse(
             json.dumps(response_data),

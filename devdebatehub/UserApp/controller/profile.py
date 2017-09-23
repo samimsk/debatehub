@@ -104,7 +104,7 @@ def updateperson(request, user_name):
 		raise Http404
 
 # ajax update controller
-def updatepersondetails(request):
+def updatepersondetails(request, user_name):
 	person = request.user
 	instance = get_object_or_404(Person, user = person)
 	update = True
@@ -124,7 +124,7 @@ def updatepersondetails(request):
             safe =False
         )
 # ajax update controller
-def updateuser(request):
+def updateuser(request, user_name):
 	instance 	= request.user
 	context		= {}
 	updated		= True

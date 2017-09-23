@@ -64,9 +64,8 @@
 			<div class="components" style="padding-left: 20%; padding-right: 20%;">
 	    		<br>
 	    		<br>
-          <div id = "confirmupdate"></div>
 	    		<div id = "listpost">
-                    <form action="{% url 'update_person_details' %}" method="post" id = "updateperson" enctype="multipart/form-data">
+                    <form action="{% url 'update_person_details' request.user.username %}" method="post" id = "updateperson" enctype="multipart/form-data">
                     {% csrf_token %}
                         <div class="form-group text-center">
                           <label>Enter Your Firstname</label>
@@ -94,11 +93,6 @@
                           <p class="text-warning" id=""></p>
                         </div>
                         <div class="form-group text-center">
-                          <label>Enter the name of your school</label>
-                          {{ form1.school }}
-                          <p class="text-warning" id="errorpassword"></p>
-                        </div>
-                        <div class="form-group text-center">
                           <label>Enter the name of your collage</label>
                           {{ form1.collage }}
                           <p class="text-warning" id="errorpassword"></p>
@@ -108,12 +102,7 @@
                           {{ form1.interestedin }}
                           <p class="text-warning" id="errorpassword"></p>
                         </div>
-                        <div class="form-group text-center fallback">
-                          <label>Upload a nice pic of yours!</label>
-                          {{ form1.profileimage }}
-                          <p class="text-warning" id="errorpassword"></p>
-                        </div>
-
+                        <div id = "confirmupdate"></div>
                         <div class="form-group text-center"><button type="submit" class="btn btn-primary">Update</button></div>
                     </form>
                     <br>
@@ -143,7 +132,7 @@ $('#updateperson').on('submit', function(event){
 function followfunc() {
     console.log("update running") // sanity check
     $.ajax({
-        url : "{% url 'update_person_details' %}", // the endpoint
+        url : "{% url 'update_person_details' request.user.username %}", // the endpoint
         type : "POST",
         data : { 
         firstname   : $('#firstname').val(), 
@@ -152,10 +141,8 @@ function followfunc() {
         location    : $('#location').val(),
         details     : $('#details').val(),
         works_at    : $('#works_at').val(),
-        school      : $('#school').val(),
         collage     : $('#collage').val(),
         interestedin: $('#interestedin').val(),
-        profileimage: $('#profileimage').val(),
         },
         success : function(json) {
             console.log(json);

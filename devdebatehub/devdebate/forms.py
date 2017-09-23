@@ -26,6 +26,7 @@ class OpinionForm(forms.ModelForm):
             'fororagainst'  : forms.CheckboxInput(
                 attrs={
                 'id'            : 'myonoffswitch',
+                'onclick'       : 'enabledisable()'
                 }),          
 
 

@@ -26,19 +26,25 @@ def feedstories(request):
 	return render(request, 'devdebate/feedstories.html', args)
 
 def debatedetail(request, debate_id):
-	args 	= {}
-	debate 	= get_object_or_404(Debate, pk = debate_id)
+	args 		= {}
+	debate 		= get_object_or_404(Debate, pk = debate_id)
+	opinionfor 	= debate.topic_opinion.filter(fororagainst = True).count()
+	opinionlist = debate.topic_opinion.all().count()
+	if opinionlist == 0:
+		opinionlist = 1
+	status = int((opinionfor/opinionlist)*100)
 
 	try:
-		ForAgainst.objects.get(name = request.user)
+		ForAgainst.objects.get(name = request.user, topic = debate)
 		showsupport = False
 	except:
 		showsupport = True
 	args['showsupport'] = showsupport
-	args['supporter']	= ForAgainst.objects.all().count()
+	args['supporter']	= ForAgainst.objects.filter(topic = debate).count()
 	args['debate'] 		= debate
 	args['opinions']	= debate.topic_opinion.all()
-	args['form']	= OpinionForm()
+	args['status']		= status
+	args['form']		= OpinionForm()
 	args['opinionscount']= debate.topic_opinion.all().count()
 	print("okhy")
 	return render(request, 'devdebate/debatedetail.html',args)
@@ -49,7 +55,7 @@ def votefor(request, debate_id):
 	vote = ForAgainst.objects.create(topic = debate_instance, name = request.user)
 	vote.save()
 	args["showunvotefor"] 	= True
-	args["supporter"]		= ForAgainst.objects.all().count()
+	args["supporter"]		= ForAgainst.objects.filter(topic = debate_instance ).count()
 	return JsonResponse(
             json.dumps(args),
             content_type="application/json",
@@ -62,7 +68,7 @@ def unvotefor(request, debate_id):
 	unvote = ForAgainst.objects.get(topic = debate_instance, name = request.user)
 	unvote.delete()
 	args["showvotefor"] = True
-	args["supporter"]	= ForAgainst.objects.all().count()
+	args["supporter"]	= ForAgainst.objects.filter(topic = debate_instance).count()
 	return JsonResponse(
             json.dumps(args),
             content_type="application/json",
@@ -84,22 +90,18 @@ def legit(request, debate_id, opinion_id):
 
 def submitopinion(request,debate_id):
 	debate_instance = get_object_or_404(Debate, pk = debate_id)
-	opinionfor 	= debate_instance.topic_opinion.filter(fororagainst = True).count()
-	opinionlist = debate_instance.topic_opinion.all().count()
-	if opinionlist == 0:
-		opinionlist = 1
-	status 		= int((opinionfor/opinionlist)*100)
-	debate_instance.stat = status
+	debate_instance.opinioncount = debate_instance.topic_opinion.all().count()
 	debate_instance.save()
 	args = {}
 	if request.method == "POST":
-		title 		= request.POST.get('title')
-		description = request.POST.get('description')
-		form 		= OpinionForm(data = request.POST) 
+		form = OpinionForm(data = request.POST)
 		if form.is_valid():
 			obj = form.save(commit = False)
 			obj.topic = debate_instance
 			obj.opinionby = request.user
+			print(request.POST.get('fororagainst'));
+			if request.POST.get('fororagainst') == 'against' :
+				obj.fororagainst = False
 			obj.save()
 			args["message"] = "Your opinion has been submited"
 		else:

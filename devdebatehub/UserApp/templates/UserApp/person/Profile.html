@@ -1,5 +1,14 @@
 {% include "navbar/nav.html" %}
 {% load staticfiles %}
+
+<style type="text/css">
+    #my-awesome-dropzone{
+        background-color: #999;
+        border-radius: 5%;
+        font: #fff;
+        height: 75px;
+    }
+</style>
 <br>
 <br>
 <div class="container">
@@ -9,9 +18,16 @@
 			<div style="border-bottom: 2px solid #ccc;">
             {% if persondetails.profileimage %}
                 <img src ="{{ persondetails.profileimage.url }}" style="width: 60%; border: 2px solid #fff; border-radius: 50%; display: block; margin: auto;">
-            {% else %}
-                <img src ="{% static 'images/person-icon.png' %}" style="width: 60%; border: 2px solid #fff; border-radius: 50%; display: block; margin: auto;">
+            {% elif person.user.username == request.user.username %}
+
+                <form id = "photoupload">
+                    <input type="file" name="">
+                    <br>
+                    <button class="btn btn-default">upload photo</button>
+                </form>
+
             {% endif %}
+
               	<br>
               	{% if persondetails.firstname or persondetails.lastname %}
             	<h4>{{ persondetails.firstname }} {{ persondetails.lastname }}</h4>
@@ -20,13 +36,18 @@
 
             </div>
             <br>
-        	{% if cannotfollow == False %}
-        	<div id = "deletelink" >
-        	   <a href="{% url 'follow_user' person.username %}"><button type="button" class="btn btn-primary" id = "followbutton">Follow</button></a>
-        	</div>
-        	<div id ="confirmfollow"></div> 
+            {% if cannotfollow == False and person.username != request.user.username  %}
+            <div id = "deletelink" >
+               <button type="button" class="btn btn-primary" id = "followbutton">Follow</button>
+            </div>
+            <div id ="confirmfollow"></div> 
+            <br>
+            {% elif  person.username != request.user.username %}
+            <div id = "getlink" >
+               <button type="button" class="btn btn-warning" onclick = "unfollowfunc()" id = "unfollowbutton">unfollow</button>
+            </div>
+            {% endif %}  
         	<br>
-        	{% endif %} 
             <div style="text-align: left;">
             	{% if persondetails.works_at %}
             	   <p><strong>WORKS AT : &nbsp</strong>{{ persondetails.works_at }}</p>
@@ -88,8 +109,10 @@
         </div>
     </div>
 </div>
+<script src="{% static 'javascripts/dropzone.js' %}">
+    
+</script>
 <script>
-	
 $('#followbutton').on('click', function(event){
     console.log("follow function invoked");
     followfunc();
@@ -105,8 +128,10 @@ function followfunc() {
         success : function(json) {
             var output = JSON.parse(json);
             if (output["success"]) {
-                $('#confirmfollow').html("<p id = 'followsuccess'>You have followed {{ person.username }}</p>");
-                $('#deletelink').empty();
+                $("#followbutton").html("Unfollow");
+                $("#followbutton").attr("onclick", "unfollowfunc()");
+                $("#followbutton").attr("class", "btn btn-warning");
+                $("#followbutton").attr("id", "unfollowbutton");
                 console.log(json);
             };
             // remove the value from the input
@@ -120,8 +145,36 @@ function followfunc() {
         }
     });
 };
+
+function unfollowfunc(){
+    console.log("unfollow function invoked");
+    $.ajax({
+        url     : "{% url 'unfollow_user' person.username %}",
+        type    : "POST",
+        success : function(json){
+            var output = JSON.parse(json);
+            if (output["success"]) {
+                $("#unfollowbutton").html("Follow");
+                $("#unfollowbutton").attr("onclick", "followfunc()");
+                $("#unfollowbutton").attr("class", "btn btn-primary");
+                $("#unfollowbutton").attr("id", "followbutton");
+                console.log(json);
+            }
+            
+        }
+    });
+}
 </script>
 <script src="{% static 'javascripts/secure.js' %}"></script>
+<footer style="background-color: #eee;">
+<div class="text-center" >
+<br>
+  <p>Demo by : Sk Samim Rana</p>
+  <p>Contact information: <a href="mailto:samimsk007@gmail.com">
+samimsk007@gmail.com</a>.</p>
+</div>
+<br>
+</footer>
 
 
 

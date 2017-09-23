@@ -66,7 +66,7 @@
 	    		<br>
                 <div id = "confirmupdate"></div>
 	    		<div id = "listpost">
-                    <form action="{% url 'update_user' %}" method="post" id = "editprofile">
+                    <form action="{% url 'update_user' request.user.username %}" method="post" id = "editprofile">
                     {% csrf_token %}
                         <div class="form-group text-center">
                           <label>Enter You date of birth</label>
@@ -113,7 +113,7 @@ $('#editprofile').on('submit', function(event){
 function followfunc() {
     console.log("update running") // sanity check
     $.ajax({
-        url : "{% url 'update_user' %}", // the endpoint
+        url : "{% url 'update_user' request.user.username %}", // the endpoint
         type : "POST",
         data : { 
         dob         : $('#dob').val(), 

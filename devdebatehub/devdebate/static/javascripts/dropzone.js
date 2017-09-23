@@ -149,7 +149,7 @@
       renameFilename: null,
       renameFile: null,
       forceFallback: false,
-      dictDefaultMessage: "Drop files here to upload",
+      dictDefaultMessage: "Upload a profile picture",
       dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
       dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
       dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",

@@ -23,3 +23,19 @@ def follow(request, user_name):
             safe=False
         )
 
+def unfollow(request, user_name):
+	follower 	= request.user
+	following   =  get_object_or_404(User, username = user_name)
+	followers_instance 	= get_object_or_404(FollowingUser, person = follower)
+	followers_instance.following.remove(following)
+	followers_instance.save()
+	followings_instance	= get_object_or_404(FollowingUser, person = following) 
+	followings_instance.followers.remove(follower)
+	followings_instance.save()
+	context = {}
+	context["success"] = True
+	return JsonResponse(
+            json.dumps(context),
+            content_type="application/json",
+            safe=False
+        )

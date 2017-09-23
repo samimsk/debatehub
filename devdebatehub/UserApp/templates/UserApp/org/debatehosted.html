@@ -38,12 +38,16 @@
 					{% endif %}
 					<h5 style="color: #9e9e9e"><strong>Following({{ following }}) | Followers({{ followers }})</strong></h5>
 				    <br>
-				    	{% if cannotfollow == False%}
+				    	{% if cannotfollow == False and org.username != request.user.username  %}
 				    	<div id = "deletelink" >
-				    	   <a href="{% url 'follow_user' org.username %}"><button type="button" class="btn btn-primary" id = "followbutton">Follow</button></a>
+				    	   <button type="button" class="btn btn-primary" id = "followbutton">Follow</button>
 				    	</div>
 				    	<div id ="confirmfollow"></div> 
 				    	<br>
+				    	{% elif  org.username != request.user.username %}
+				    	<div id = "getlink" >
+				    	   <button type="button" class="btn btn-warning" onclick = "unfollowfunc()" id = "unfollowbutton">unfollow</button>
+				    	</div>
 				    	{% endif %}
 				</div>
 			</div>
@@ -67,7 +71,7 @@
 	    	{% if debatelist %}
 	    	{% for debate in debatelist %}
 	    	<div class="col-md-4">
-	    		<h4>{{ debate.title }}</h4>
+	    		<a href="{% url 'debatedetail' debate.id %}" style="text-decoration: none;"><h4>{{ debate.title }}</h4></a>
 	    		<br>
 	    		<p>{{ debate.description }}
 	    		</p>
@@ -96,8 +100,10 @@ function followfunc() {
         success : function(json) {
             var output = JSON.parse(json);
             if (output["success"]) {
-                $('#confirmfollow').html("<p id = 'followsuccess'>You have followed {{ person.username }}</p>");
-                $('#deletelink').empty();
+            	$("#followbutton").html("Unfollow");
+            	$("#followbutton").attr("onclick", "unfollowfunc()");
+            	$("#followbutton").attr("class", "btn btn-warning");
+                $("#followbutton").attr("id", "unfollowbutton");
                 console.log(json);
             };
             // remove the value from the input
@@ -111,6 +117,25 @@ function followfunc() {
         }
     });
 };
+
+function unfollowfunc(){
+	console.log("unfollow function invoked");
+	$.ajax({
+		url 	: "{% url 'unfollow_user' org.username %}",
+		type 	: "POST",
+		success : function(json){
+			var output = JSON.parse(json);
+            if (output["success"]) {
+            	$("#unfollowbutton").html("Follow");
+            	$("#unfollowbutton").attr("onclick", "followfunc()");
+            	$("#unfollowbutton").attr("class", "btn btn-primary");
+                $("#unfollowbutton").attr("id", "followbutton");
+                console.log(json);
+            }
+			
+		}
+	});
+}
 </script>
 <script src="{% static 'javascripts/secure.js' %}"></script>
 <footer style="background-color: #eee;">

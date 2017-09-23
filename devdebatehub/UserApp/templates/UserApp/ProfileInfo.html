@@ -17,7 +17,17 @@
         	{% endif %}
         	<h5 style="color: #9e9e9e"><strong>Following({{ following }}) | Followers({{ followers }})</strong></h5>
         	<br>
-        	<button type="button" class="btn btn-primary">Follow</button>   
+			{% if cannotfollow == False and org.username != request.user.username  %}
+	    	<div id = "deletelink" >
+	    	   <button type="button" class="btn btn-primary" id = "followbutton">Follow</button>
+	    	</div>
+	    	<div id ="confirmfollow"></div> 
+	    	<br>
+	    	{% elif  org.username != request.user.username %}
+	    	<div id = "getlink" >
+	    	   <button type="button" class="btn btn-warning" onclick = "unfollowfunc()" id = "unfollowbutton">unfollow</button>
+	    	</div>
+	    	{% endif %} 
         	<br>
         	<br>
         	{% if persondetails.details %}
@@ -64,6 +74,69 @@
 		</div>	
 	</div>
 </div>
+<script>
+$('#followbutton').on('click', function(event){
+    console.log("follow function invoked");
+    followfunc();
+    event.preventDefault();
+    return false; 
+});
+
+function followfunc() {
+    console.log("followfunc running") // sanity check
+    $.ajax({
+        url : "{% url 'follow_user' org.username %}", // the endpoint
+        type : "POST", // http method
+        success : function(json) {
+            var output = JSON.parse(json);
+            if (output["success"]) {
+            	$("#followbutton").html("Unfollow");
+            	$("#followbutton").attr("onclick", "unfollowfunc()");
+            	$("#followbutton").attr("class", "btn btn-warning");
+                $("#followbutton").attr("id", "unfollowbutton");
+                console.log(json);
+            };
+            // remove the value from the input
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+};
+
+function unfollowfunc(){
+	console.log("unfollow function invoked");
+	$.ajax({
+		url 	: "{% url 'unfollow_user' org.username %}",
+		type 	: "POST",
+		success : function(json){
+			var output = JSON.parse(json);
+            if (output["success"]) {
+            	$("#unfollowbutton").html("Follow");
+            	$("#unfollowbutton").attr("onclick", "followfunc()");
+            	$("#unfollowbutton").attr("class", "btn btn-primary");
+                $("#unfollowbutton").attr("id", "followbutton");
+                console.log(json);
+            }
+			
+		}
+	});
+}
+</script>
+<script src="{% static 'javascripts/secure.js' %}"></script>
+<footer style="background-color: #eee;">
+<div class="text-center" >
+<br>
+  <p>Demo by : Sk Samim Rana</p>
+  <p>Contact information: <a href="mailto:samimsk007@gmail.com">
+samimsk007@gmail.com</a>.</p>
+</div>
+<br>
+</footer>
 
 
 

@@ -29,7 +29,7 @@ class ForAgainst(models.Model):
 class Opinion(models.Model):
 	topic 	= models.ForeignKey(Debate, on_delete = models.CASCADE, related_name = 'topic_opinion')
 	title   = models.CharField(max_length = 100, blank = True, null = True)
-	description = models.CharField(max_length = 2000, blank = False )
+	description = models.CharField(max_length = 100000, blank = False )
 	opinionby = models.ForeignKey(AUTH_USER_MODEL, on_delete = models.CASCADE, related_name = 'opinion_by')
 	fororagainst = models.BooleanField(default = True)
 	legit = models.IntegerField(default = 0)
